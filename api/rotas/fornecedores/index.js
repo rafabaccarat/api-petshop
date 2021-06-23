@@ -86,6 +86,20 @@ roteador.delete('/:idFornecedor', async (requisicao, resposta, proximo) => {
 
 // aqui integramos produtos/index.js aos fornecedores
 const roteadorProdutos = require('./produtos')
-roteador.use('/:idFornecedor/produtos', roteadorProdutos)
+
+//middleware para verificar as nossas rotas de fornecedores
+const verificarFornecedor = async (requisicao, resposta, proximo) => {
+    try {
+        const id = requisicao.params.idFornecedor
+        const fornecedor = new Fornecedor({ id: id})
+        await fornecedor.carregar()
+        requisicao.fornecedor = fornecedor //pratica do express comum - vai estar disponivel em todas as rotas
+        proximo()
+    } catch (erro) {
+        proximo(erro)
+    }
+}
+
+roteador.use('/:idFornecedor/produtos', verificarFornecedor, roteadorProdutos)
 
 module.exports = roteador
