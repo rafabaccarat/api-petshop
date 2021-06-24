@@ -16,12 +16,11 @@ module.exports = {
         }) 
 
         if(!encontrado){ //caso não exista, estiver vazia
-            throw new NaoEncontrado()
+            throw new NaoEncontrado('Fornecedor')
         }
 
         return encontrado //retornar o que foi encontrado
     },
-
     atualizar(id, dadosParaAtualizar){
         return Modelo.update(
             dadosParaAtualizar,
